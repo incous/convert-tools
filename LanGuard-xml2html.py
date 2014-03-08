@@ -3,7 +3,6 @@
 import sys
 from xml.dom.minidom import parse
 
-f = open(sys.argv[2], 'w')
 xmlContent = parse(sys.argv[1])
 hostList = xmlContent.getElementsByTagName('host')
 htmlContent = '''<html>
