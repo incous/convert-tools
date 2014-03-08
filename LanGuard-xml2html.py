@@ -71,7 +71,7 @@ for host in hostList:
 ''' % (vulName, vulDescription, vulCategory, vulSeverity)).encode('utf-8'))
 	f.write('''</table>
 ''')
-	# if len(host.getElementsByTagName('alerts')[0].getElementsByTagName('missing_hotfixes')) == 0: continue
+	if len(host.getElementsByTagName('alerts')[0].getElementsByTagName('missing_hotfixes')) == 0: continue
 	f.write('''<h2>List of available hotfixes</h2>
 <table border="1">
 <tr>
