@@ -17,19 +17,19 @@ f.write('''<html>
 for host in hostList:
 	# extract host information
 	hostname = 'N/A' if len(host.getElementsByTagName('hostname')[0].childNodes) == 0 else host.getElementsByTagName('hostname')[0].childNodes[0].data
-	f.write('''<h1>Host %s</h1>
+	f.write(('''<h1>Host %s</h1>
 <h2>System information</h2>
 <ul>
 <li>Hostname: %s</li>
-''' % (hostname, hostname))
+''' % (hostname, hostname)).encode('utf-8'))
 	ip = host.getElementsByTagName('ip')[0].childNodes[0].data
-	f.write('''<li>IP address: %s</li>
-''' % ip)
+	f.write(('''<li>IP address: %s</li>
+''' % ip).encode('utf-8'))
 	os = '' if len(host.getElementsByTagName('os')[0].childNodes) == 0 else host.getElementsByTagName('os')[0].childNodes[0].data
 	servicesPack = '' if len(host.getElementsByTagName('servpack')[0].childNodes) == 0 else host.getElementsByTagName('servpack')[0].childNodes[0].data
 	os = os + ' SP' + servicesPack if servicesPack != '' else os
-	f.write('''<li>OS: %s</li>
-</ul>''' % os)
+	f.write(('''<li>OS: %s</li>
+</ul>''' % os).encode('utf-8'))
 	if len(host.getElementsByTagName('apps_installed')) == 0: continue
 	f.write('''<h2>List of installed applications</h2>
 <table border="1">
@@ -43,10 +43,10 @@ for host in hostList:
 		appVersion = app.getAttribute('version')
 		appVendor = app.getAttribute('publisher')
 		appUp2date = app.getAttribute('is_up_to_date')
-		f.write('''<tr>
+		f.write(('''<tr>
 	<td>%s</td><td>%s</td><td>%s</td><td>%s</td>
 </tr>
-''' % (appName, appVersion, appVendor, appUp2date))
+''' % (appName, appVersion, appVendor, appUp2date)).encode('utf-8'))
 	f.write('''</table>
 ''')
 	if len(host.getElementsByTagName('alerts')) == 0: continue
@@ -65,10 +65,10 @@ for host in hostList:
 			break
 		else:
 			vulSeverity = vul.parentNode.parentNode.getAttribute('level')
-		f.write('''<tr>
+		f.write(('''<tr>
 	<td>%s</td><td>%s</td><td>%s</td><td>%s</td>
 </tr>
-''' % (vulName, vulDescription, vulCategory, vulSeverity))
+''' % (vulName, vulDescription, vulCategory, vulSeverity)).encode('utf-8'))
 	f.write('''</table>
 ''')
 	# if len(host.getElementsByTagName('alerts')[0].getElementsByTagName('missing_hotfixes')) == 0: continue
@@ -84,10 +84,10 @@ for host in hostList:
 		hotfixTitle = hotfix.getElementsByTagName('title')[0].childNodes[0].data
 		hotfixDate = hotfix.getElementsByTagName('date')[0].childNodes[0].data
 		hotfixSeverity = 'N/A' if len(hotfix.getElementsByTagName('severity')[0].childNodes) == 0 else hotfix.getElementsByTagName('severity')[0].childNodes[0].data
-		f.write('''<tr>
+		f.write(('''<tr>
 	<td>%s</td><td>%s</td><td>%s</td><td>%s</td>
 </tr>
-''' % (hotfixBID, hotfixTitle, hotfixDate, hotfixSeverity))
+''' % (hotfixBID, hotfixTitle, hotfixDate, hotfixSeverity)).encode('utf-8'))
 	f.write('</table><hr />')
 f.write('</body></html>')
 f.close()
