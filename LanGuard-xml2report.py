@@ -4,6 +4,13 @@ import sys
 import re
 from xml.dom.minidom import parse
 
+def dateRewrite(text):
+	matchObj = re.match(r'(\d{4})-(\d\d)-(\d\d)',text)
+	if matchObj:
+		return matchObj.group(3) + '/' + matchObj.group(2) + '/' + matchObj.group(1)
+	else:
+		return text
+
 f = open(sys.argv[2], 'w')
 xmlContent = parse(sys.argv[1])
 hostList = xmlContent.getElementsByTagName('host')
@@ -101,7 +108,7 @@ for host in hostList:
 				else:
 					vulSeverityLabel = 'N/A'
 				f.write(('''<tr>
-			<td>%s</td><td>%s</td><td>%s</td>
+			<td>%s</td><td align="center">%s</td><td align="center">%s</td>
 		</tr>
 ''' % (vulName, vulCategoryLabel.decode('utf-8'), vulSeverityLabel.decode('utf-8'))).encode('utf-8'))
 			f.write('''</table>
@@ -119,9 +126,11 @@ for host in hostList:
 				nTotal += 1
 				hotfixBID = hotfix.getElementsByTagName('bulletinid')[0].childNodes[0].data
 				hotfixTitle = hotfix.getElementsByTagName('title')[0].childNodes[0].data
-				# grep KBid
+				matchObj = re.match(r'.*\s(\(KB\d+\))',hotfixTitle)
 				if hotfixBID == 'Not Available':
 					hotfixBID = hotfixTitle
+				elif matchObj:
+					hotfixBID += ' ' + matchObj.group(1)
 				hotfixDate = hotfix.getElementsByTagName('date')[0].childNodes[0].data
 				hotfixSeverity = 'N/A' if len(hotfix.getElementsByTagName('severity')[0].childNodes) == 0 else hotfix.getElementsByTagName('severity')[0].childNodes[0].data
 				if hotfixSeverity == 'Critical' or hotfixSeverity == 'Important':
@@ -136,9 +145,9 @@ for host in hostList:
 				else:
 					hotfixSeverityLabel = 'N/A'
 				f.write(('''<tr>
-			<td>%s</td><td>%s</td><td>%s</td>
+			<td>%s</td><td align="center">%s</td><td align="center">%s</td>
 		</tr>
-''' % (hotfixBID, hotfixDate, hotfixSeverityLabel.decode('utf-8'))).encode('utf-8'))
+''' % (hotfixBID, dateRewrite(hotfixDate), hotfixSeverityLabel.decode('utf-8'))).encode('utf-8'))
 			f.write('</table>')
 	f.write(('''<h3>Thống kê phân loại theo mức độ nguy hiểm</h3>
 	<table>
