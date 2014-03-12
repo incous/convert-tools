@@ -86,6 +86,8 @@ for host in hostList:
 	for hotfix in hotfixes:
 		hotfixBID = hotfix.getElementsByTagName('bulletinid')[0].childNodes[0].data
 		hotfixTitle = hotfix.getElementsByTagName('title')[0].childNodes[0].data
+		if hotfixBID == 'Not Available':
+			hotfixBID = hotfixTitle
 		hotfixDate = hotfix.getElementsByTagName('date')[0].childNodes[0].data
 		hotfixSeverity = 'N/A' if len(hotfix.getElementsByTagName('severity')[0].childNodes) == 0 else hotfix.getElementsByTagName('severity')[0].childNodes[0].data
 		if hotfixSeverity == 'Critical' or hotfixSeverity == 'Important':
