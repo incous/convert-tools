@@ -39,7 +39,7 @@ for host in hostList:
 # ''' % (appName, appVersion, appVendor, appUp2date)).encode('utf-8'))
 # 	f.write('''</table>
 # ''')
-	if len(host.getElementsByTagName('alerts')) > 0:
+	if len(host.getElementsByTagName('alerts')) > 0 and len(host.getElementsByTagName('alerts')[0].getElementsByTagName('alert')) > 0:
 		f.write('''<h2>Danh sách lỗi được phân loại theo mức độ nguy hiểm</h2>
 	<table border="1">
 	<tr>
