@@ -57,12 +57,16 @@ for host in hostList:
 				vulCategoryLabel = 'Phần mềm'
 			elif vulCategory == 'Registry_Alerts':
 				vulCategoryLabel = 'Cấu hình hệ thống'
-			elif vulCategory == 'Services_Alerts':
+			elif vulCategory == 'Services_Alerts' or vulCategory == 'Miscellaneous_Alerts':
 				vulCategoryLabel = 'Dịch vụ ứng dụng khác'
+			elif vulCategory == 'Web_Alerts':
+				vulCategoryLabel = 'Trình duyệt Web'
+			elif vulCategory == 'MalwareProtection_Alerts':
+				vulCategoryLabel = 'Chưa cập nhật Anti-Virus'
 			elif vulCategory == 'Information_Alerts':
 				continue
 			else:
-				vulCategoryLabel = 'N/A'
+				vulCategoryLabel = vulCategory
 			vulSeverity = vul.parentNode.parentNode.getAttribute('level')
 			if vulSeverity == ' 0':
 				vulSeverityLabel = 'Nghiêm trọng'
