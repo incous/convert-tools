@@ -11,6 +11,14 @@ def dateRewrite(text):
 	else:
 		return text
 
+def warnColor(severity):
+	if severity == 'Nghiêm trọng':
+		return 'bgcolor="#FF0000"'
+	elif severity == 'Trung bình':
+		return 'bgcolor="#FFFF00"'
+	elif severity == 'Thấp':
+		return 'bgcolor="#00FF00"'
+
 f = open(sys.argv[2], 'w')
 xmlContent = parse(sys.argv[1])
 hostList = xmlContent.getElementsByTagName('host')
@@ -108,9 +116,9 @@ for host in hostList:
 				else:
 					vulSeverityLabel = 'N/A'
 				f.write(('''<tr>
-			<td>%s</td><td align="center">%s</td><td align="center">%s</td>
+			<td>%s</td><td align="center">%s</td><td align="center" %s>%s</td>
 		</tr>
-''' % (vulName, vulCategoryLabel.decode('utf-8'), vulSeverityLabel.decode('utf-8'))).encode('utf-8'))
+''' % (vulName, vulCategoryLabel.decode('utf-8'), warnColor(vulSeverityLabel), vulSeverityLabel.decode('utf-8'))).encode('utf-8'))
 			f.write('''</table>
 ''')
 		if len(host.getElementsByTagName('alerts')[0].getElementsByTagName('hotfix')) > 0:
@@ -145,9 +153,9 @@ for host in hostList:
 				else:
 					hotfixSeverityLabel = 'N/A'
 				f.write(('''<tr>
-			<td>%s</td><td align="center">%s</td><td align="center">%s</td>
+			<td>%s</td><td align="center">%s</td><td align="center" %s>%s</td>
 		</tr>
-''' % (hotfixBID, dateRewrite(hotfixDate), hotfixSeverityLabel.decode('utf-8'))).encode('utf-8'))
+''' % (hotfixBID, dateRewrite(hotfixDate), warnColor(hotfixSeverityLabel), hotfixSeverityLabel.decode('utf-8'))).encode('utf-8'))
 			f.write('</table>')
 	f.write(('''<h3>Thống kê phân loại theo mức độ nguy hiểm</h3>
 	<table>
