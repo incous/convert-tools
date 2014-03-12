@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import sys
+import re
 from xml.dom.minidom import parse
 
 f = open(sys.argv[2], 'w')
@@ -48,6 +49,8 @@ for host in hostList:
 	vulList = host.getElementsByTagName('alerts')[0].getElementsByTagName('alert')
 	for vul in vulList:
 		vulName = vul.getElementsByTagName('name')[0].childNodes[0].data
+		matchObj = re.match(r'(OVAL:\d+):.*',vulName)
+		if matchObj: vulName = matchObj.group(1)
 		# vulDescription = '' if len(vul.getElementsByTagName('descr')[0].childNodes) ==0 else vul.getElementsByTagName('descr')[0].childNodes[0].data
 		vulCategory = vul.parentNode.nodeName
 		if vulCategory == 'Software_Alerts':
