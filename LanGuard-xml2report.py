@@ -78,6 +78,7 @@ for host in hostList:
 ''' % (vulName, vulCategoryLabel.decode('utf-8'), vulSeverityLabel.decode('utf-8'))).encode('utf-8'))
 		f.write('''</table>
 ''')
+	if len(host.getElementsByTagName('hotfixes')) == 0: continue
 	if len(host.getElementsByTagName('hotfixes')[0].getElementsByTagName('hotfix')) > 0:
 		f.write('''<h2>Thông tin bản vá còn thiếu</h2>
 	<table border="1">
