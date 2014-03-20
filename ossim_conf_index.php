@@ -498,6 +498,37 @@ $CONFIG = array(
                 'advanced' => 1 ,
                 'section' => 'users',
             ),
+            'login_enable_otp' => array(
+                'type' => array(
+                    'yes' => _('Yes'),
+                    'no' => _('No')
+                ),
+                'help' => '',
+                'desc' => _('Enable OpenOTP for login'),
+                'advanced' => 1 ,
+                'section' => 'users'
+            ),
+            'login_otp_server' => array(
+                'type' => 'text',
+                'help' => 'OpenOTP service URL',
+                'desc' => _('OpenOTP service URL'),
+                'advanced' => 1 ,
+                'section' => 'users'
+            ),
+            'login_otp_domain' => array(
+                'type' => 'text',
+                'help' => '' ,
+                'desc' => _('OpenOTP login domain'),
+                'advanced' => 1 ,
+                'section' => 'users'
+            ),
+            'login_otp_realm' => array(
+                'type' => 'text',
+                'help' => '' ,
+                'desc' => _('OpenOTP login realm'),
+                'advanced' => 1 ,
+                'section' => 'users'
+            ),
             'login_create_not_existing_user_menu' => array(
                 'type' => $menus ,
                 'help' => '',
