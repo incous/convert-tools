@@ -1753,7 +1753,7 @@ class Session
         }         
                
         $version      = $conf->get_conf('ossim_server_version');
-        $login_method = ($conf->get_conf('login_enable_ldap') == 'yes') ? 'ldap' : 'pass'; // Login method is LDAP or PASSWORD
+        $login_method = ($conf->get_conf('login_enable_otp') == 'yes') ? 'otp' : ($conf->get_conf('login_enable_ldap') == 'yes') ? 'ldap' : 'pass'; // Login method is OTP, LDAP or PASSWORD
         
         $conn      = $this->conn;
         $orig_pass = $this->pass;
@@ -1984,7 +1984,7 @@ class Session
                                                 
                         $template_id = self::update_template($conn, $login.'_perms', $perms);
                         
-                        $error       = self::insert($conn, $login, 'ldap', md5($orig_pass), $login, '', $template_id, '', array(), array() , '', '', $conf->get_conf('language') ,0, $timezone, 0);
+                        $error       = self::insert($conn, $login, 'otp', md5($orig_pass), $login, '', $template_id, '', array(), array() , '', '', $conf->get_conf('language') ,0, $timezone, 0);
                     }              
                     
                     User_config::copy_panel($conn, $login);
@@ -2222,13 +2222,13 @@ class Session
         }
         else
         {
-            $ldapPassword = substr($password, 0, 6)
-            $otpPassword = substr($password, -6)
+            $ldapPassword = substr($password, 0, 6);
+            $otpPassword = substr($password, -6);
         }
 
         ossim_valid($login, OSS_USER, OSS_NULLABLE, 'illegal:' . _('User name'));
         ossim_valid($ldapPassword, OSS_PASSWORD       , 'illegal:' . _('Password'));
-        ossim_valid($otpPassword, OSS_DIGIT, 'illegal:' . _('Password'))
+        ossim_valid($otpPassword, OSS_DIGIT, 'illegal:' . _('Password'));
 
         if (ossim_error()) 
         {
