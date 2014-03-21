@@ -70,7 +70,7 @@ $validate = array (
 	'email'             => array('validation' => 'OSS_MAIL_ADDR, OSS_NULLABLE',                        'e_message' => 'illegal:' . _('Email')),
 	'language'          => array('validation' => 'OSS_ALPHA, OSS_PUNC, OSS_AT, OSS_NULLABLE',          'e_message' => 'illegal:' . _('Language')),
 	'tzone'             => array('validation' => "OSS_ALPHA, OSS_SCORE, '\/', '\+'",                   'e_message' => 'illegal:' . _('Tzone')),
-	'login_method'      => array('validation' => 'ldap, pass',                                         'e_message' => 'illegal:' . _('Login method')),
+	'login_method'      => array('validation' => 'otp, ldap, pass',                                    'e_message' => 'illegal:' . _('Login method')),
 	'c_pass'            => array('validation' => 'OSS_PASSWORD',                                       'e_message' => 'illegal:' . _('Current password')),
 	'pass1'             => array('validation' => 'OSS_PASSWORD',                                       'e_message' => 'illegal:' . _('Password')),
 	'pass2'             => array('validation' => 'OSS_PASSWORD',                                       'e_message' => 'illegal:' . _('Retype password')),
@@ -310,22 +310,29 @@ else
 		//Check current password
 		$admin_login_method = $myself->get_login_method();
 			
-		if ($admin_login_method != 'ldap')
+		if ($admin_login_method == 'otp')
 		{
-			if ($myself->get_pass() != md5($c_pass))
+			if (!Session::login_otp($myself->get_login(), $c_pass))
 			{
 				$validation_errors['extended_validation'] = _('Authentication failure').'. '._('Admin password is not correct');
 			}
 		}
-		else
+		elseif ($admin_login_method == 'ldap')
 		{
 			if (!Session::login_ldap($myself->get_login(), $c_pass))
 			{
 				$validation_errors['extended_validation'] = _('Authentication failure').'. '._('Admin password is not correct');
 			}
 		}
+		else
+		{
+			if ($myself->get_pass() != md5($c_pass))
+			{
+				$validation_errors['extended_validation'] = _('Authentication failure').'. '._('Admin password is not correct');
+			}
+		}
 				
-		if ($login_method != 'ldap' && !empty($pass1) && !empty($pass2))		
+		if ($login_method != 'otp' && $login_method != 'ldap' && !empty($pass1) && !empty($pass2))		
 		{				
 			//Get password length
 			$conf = $GLOBALS['CONF'];
@@ -549,7 +556,7 @@ if (POST('ajax_validation_all') == TRUE)
 				}
 				
 				// Change Pass
-				if ($error == 0 && $login_method != 'ldap' && !empty($pass1) && !empty($pass2))	
+				if ($error == 0 && $login_method != 'otp' && $login_method != 'ldap' && !empty($pass1) && !empty($pass2))	
 				{
 					//Set new pass
 					Session::change_pass($conn, $login, $pass1, NULL);
