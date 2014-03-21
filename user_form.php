@@ -72,8 +72,12 @@ $tzlist = timezone_identifiers_list();
 sort($tzlist);
 
 //Login method list
-$lm_list = array('ldap' => _('LDAP'), 'pass' => _('PASSWORD'));
-					
+$login_enable_ldap = ($conf->get_conf('login_enable_ldap') == 'yes') ? TRUE : FALSE;
+$login_enable_otp = ($conf->get_conf('login_enable_otp') == 'yes') ? TRUE : FALSE;
+
+$lm_list = array('pass' => _('PASSWORD'));
+if ($login_enable_otp == TRUE) $lm_list['otp'] = _('OTP');
+if ($login_enable_ldap == TRUE) $lm_list['ldap'] = _('LDAP');
 
 //Entities and Templates
 
@@ -122,9 +126,14 @@ $language          = 'en_GB';
 
 $tzone    	  	   = date("e");
 
-$login_enable_ldap = ($conf->get_conf('login_enable_ldap') == 'yes') ? TRUE : FALSE;
-
-$login_method      = ($login_enable_ldap == TRUE) ? 'ldap' : 'pass';
+if ($login_enable_otp == TRUE)
+{
+	$login_method = 'otp';
+}
+else
+{
+	$login_method      = ($login_enable_ldap == TRUE) ? 'ldap' : 'pass';
+}
 
 $last_pass_change  = date('Y-m-d H:i:s');
 
@@ -205,7 +214,10 @@ if ($login != '')
 		$tzone        = $user->get_tzone();
 		$template_id  = $user->get_template_id();
 		$login_method = $user->get_login_method();
-		$login_method = ($login_method == 'ldap') ? 'ldap' : 'pass';
+		if (!in_array($login_method, array('otp','ldap','pass')))
+		{
+			$login_method = 'pass';
+		}
 		$last_pass_change = $user->last_pass_change();
 					
 		$is_admin     = $user->get_is_admin();
@@ -657,7 +669,7 @@ if ($login != '')
 		{			
 			var login_method = $('#login_method').val();
 			
-			if (login_method == "ldap") 
+			if ((login_method == "otp") || (login_method == "ldap"))
 			{
 				$('.pass_container').hide();
 				$('.pass_option').removeClass('vfield');
@@ -1140,7 +1152,7 @@ if ($login != '')
 				
 				<?php
 				
-				if ($login_enable_ldap == TRUE && !$is_default_admin) 
+				if ((($login_enable_otp == TRUE) || ($login_enable_ldap == TRUE)) && !$is_default_admin) 
 				{ 
 					?>
 					<!-- Login method -->
