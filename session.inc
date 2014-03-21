@@ -1753,7 +1753,14 @@ class Session
         }         
                
         $version      = $conf->get_conf('ossim_server_version');
-        $login_method = ($conf->get_conf('login_enable_otp') == 'yes') ? 'otp' : ($conf->get_conf('login_enable_ldap') == 'yes') ? 'ldap' : 'pass'; // Login method is OTP, LDAP or PASSWORD
+        if ($conf->get_conf('login_enable_otp') == 'yes')
+        {
+            $login_method = 'otp';
+        }
+        else
+        {
+            ($conf->get_conf('login_enable_ldap') == 'yes') ? 'ldap' : 'pass'; // Login method is OTP, LDAP or PASSWORD
+        }
         
         $conn      = $this->conn;
         $orig_pass = $this->pass;
@@ -1957,7 +1964,7 @@ class Session
             //Logged user doesn't exist in Database
             if (($rs = $conn->Execute($query, $params)) && ($rs->EOF)) 
             {                                                           
-                if($conf->get_conf('login_otp_require_a_valid_ossim_user') == 'no')
+                if($conf->get_conf('login_ldap_require_a_valid_ossim_user') == 'no')
                 {
                     //Create the user with default perms
                     $timezone = trim(`head -1 /etc/timezone`);
@@ -2222,7 +2229,7 @@ class Session
         }
         else
         {
-            $ldapPassword = substr($password, 0, 6);
+            $ldapPassword = substr($password, 0, -6);
             $otpPassword = substr($password, -6);
         }
 
